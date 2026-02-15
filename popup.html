@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="style.css">
+  </head>
+  <body>
+    <div class="container">
+      <header>
+        <h1>Tabuu</h1>
+        <div class="actions">
+          <button id="btn-log-keep">Log Session</button>
+          <button id="btn-log-close" class="danger">Log & Close All</button>
+        </div>
+      </header>
+
+      <!-- Status Feedback Area -->
+      <div id="status-msg" class="hidden status-bar"></div>
+
+      <div class="history-section">
+        <h2>Saved Sessions</h2>
+        <ul id="session-list">
+          <li class="empty-state">Loading...</li>
+        </ul>
+      </div>
+    </div>
+    <script src="popup.js"></script>
+  </body>
+</html>

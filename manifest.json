@@ -1,0 +1,22 @@
+{
+  "manifest_version": 2,
+  "name": "Tabuu - Session Manager",
+  "version": "1.0",
+  "description": "Save and restore browser sessions locally.",
+  "icons": {
+    "48": "icons/icon-48.png"
+  },
+  "permissions": [
+    "tabs",
+    "storage",
+    "menus"
+  ],
+  "browser_action": {
+    "default_icon": "icons/icon-48.png",
+    "default_title": "Tabuu",
+    "default_popup": "popup.html"
+  },
+  "background": {
+    "scripts": ["background.js"]
+  }
+}
