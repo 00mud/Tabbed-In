@@ -1,4 +1,4 @@
-# Tabuu – Advanced Cross-Device Session Manager
+# Tabbed-In – Advanced Cross-Device Session Manager
 
 A Firefox browser extension that logs, syncs, and restores complete browser sessions across devices.
 
@@ -23,7 +23,7 @@ A Firefox browser extension that logs, syncs, and restores complete browser sess
 2. Click **This Firefox**
 3. Click **Load Temporary Add-on...**
 4. Browse to this folder and select `manifest.json`
-5. The Tabuu icon will appear in your toolbar
+5. The Tabbed-In icon will appear in your toolbar
 
 For permanent installation, the extension must be signed by Mozilla via [addons.mozilla.org](https://addons.mozilla.org).
 
@@ -32,7 +32,7 @@ For permanent installation, the extension must be signed by Mozilla via [addons.
 ## File Structure
 
 ```
-tabuu-extension/
+Tabbed-In-extension/
 ├── manifest.json           # Extension manifest (MV2)
 ├── background/
 │   └── background.js       # Service worker: session capture, storage, sync
@@ -61,7 +61,7 @@ The background script queries `browser.tabs.query()` for the current window, fil
 - Array of tab objects: URL, title, favicon, pinned state, active state
 
 ### Storage
-- **Local sessions** are stored in `browser.storage.local` under `tabuu_sessions`
+- **Local sessions** are stored in `browser.storage.local` under `Tabbed-In_sessions`
 - **Sync sessions** are stored in `browser.storage.sync` under keys like `sess_<id>`, compressed to fit Firefox Sync's 8KB-per-item quota
 
 ### Sync
