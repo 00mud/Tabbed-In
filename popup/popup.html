@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=400" />
+  <title>Tabbed-In</title>
+  <link rel="stylesheet" href="popup.css" />
+</head>
+<body>
+
+  <!-- ── Header ─────────────────────────────────────────────── -->
+  <header class="header">
+    <div class="header-brand">
+      <img src="../icons/icon-32.png" alt="Tabbed-In" class="header-logo" />
+      <span class="header-title">Tabbed-In</span>
+    </div>
+    <nav class="header-nav">
+      <button class="nav-btn active" data-view="sessions" title="Sessions">
+        <svg viewBox="0 0 16 16" fill="none"><rect x="1" y="2" width="14" height="3" rx="1" fill="currentColor"/><rect x="1" y="7" width="14" height="3" rx="1" fill="currentColor" opacity=".6"/><rect x="1" y="12" width="10" height="2" rx="1" fill="currentColor" opacity=".35"/></svg>
+      </button>
+      <button class="nav-btn" data-view="live" title="Live tabs">
+        <svg viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="6" stroke="currentColor" stroke-width="1.5"/><circle cx="8" cy="8" r="2.5" fill="currentColor"/></svg>
+      </button>
+      <button class="nav-btn" data-view="remote" title="Synced from other devices">
+        <svg viewBox="0 0 16 16" fill="none"><path d="M2 6C2 4 4 2 8 2s6 2 6 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><path d="M4 10c0-1.1 1.8-2 4-2s4 .9 4 2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><circle cx="8" cy="13" r="1.5" fill="currentColor"/></svg>
+      </button>
+      <button class="nav-btn" data-view="settings" title="Settings">
+        <svg viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="2.5" stroke="currentColor" stroke-width="1.5"/><path d="M8 1v2M8 13v2M1 8h2M13 8h2M3.05 3.05l1.41 1.41M11.54 11.54l1.41 1.41M3.05 12.95l1.41-1.41M11.54 4.46l1.41-1.41" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>
+      </button>
+    </nav>
+  </header>
+
+  <!-- ── Action Bar ─────────────────────────────────────────── -->
+  <div class="action-bar" id="action-bar">
+    <button class="btn btn-primary" id="btn-log">
+      <svg viewBox="0 0 16 16" fill="none"><path d="M8 3v10M3 8h10" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+      Log Session
+    </button>
+    <button class="btn btn-danger" id="btn-log-close">
+      <svg viewBox="0 0 16 16" fill="none"><path d="M3 8h10" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path d="M4 4l8 8M12 4l-8 8" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" opacity=".7"/></svg>
+      Log &amp; Close
+    </button>
+  </div>
+
+  <!-- ── Label Input (inline) ──────────────────────────────── -->
+  <div class="label-row hidden" id="label-row">
+    <input type="text" id="session-label" class="label-input" placeholder="Label (optional)…" maxlength="80" />
+    <button class="btn btn-confirm" id="btn-confirm">Save</button>
+    <button class="btn btn-cancel" id="btn-cancel">✕</button>
+  </div>
+
+  <!-- ── Main Content ──────────────────────────────────────── -->
+  <main class="main">
+
+    <!-- Sessions view -->
+    <section class="view active" id="view-sessions">
+      <div class="search-row">
+        <input type="search" id="search-sessions" class="search-input" placeholder="Search sessions…" />
+      </div>
+      <div class="session-list" id="session-list">
+        <div class="empty-state" id="empty-sessions">
+          <svg viewBox="0 0 48 48" fill="none"><rect x="8" y="10" width="32" height="6" rx="3" fill="currentColor" opacity=".15"/><rect x="8" y="20" width="32" height="6" rx="3" fill="currentColor" opacity=".1"/><rect x="8" y="30" width="22" height="6" rx="3" fill="currentColor" opacity=".07"/></svg>
+          <p>No sessions yet.<br/>Click <strong>Log Session</strong> to save your tabs.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Live tabs view -->
+    <section class="view" id="view-live">
+      <div class="view-header">Current window tabs</div>
+      <div class="tab-list" id="live-tab-list">
+        <div class="spinner"></div>
+      </div>
+    </section>
+
+    <!-- Remote sessions view -->
+    <section class="view" id="view-remote">
+      <div class="view-header">
+        Sessions from other devices
+        <button class="icon-btn" id="btn-refresh-remote" title="Refresh">
+          <svg viewBox="0 0 16 16" fill="none"><path d="M13.5 3A7 7 0 1 0 15 8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><path d="M11 1l2 2-2 2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+      </div>
+      <div class="session-list" id="remote-list">
+        <div class="empty-state" id="empty-remote">
+          <svg viewBox="0 0 48 48" fill="none"><path d="M6 18C6 12 12 6 24 6s18 6 18 12" stroke="currentColor" stroke-width="3" stroke-linecap="round"/><path d="M12 30c0-3.3 5.4-6 12-6s12 2.7 12 6" stroke="currentColor" stroke-width="3" stroke-linecap="round"/><circle cx="24" cy="39" r="4.5" fill="currentColor" opacity=".25"/></svg>
+          <p>Enable sync in Settings<br/>to see sessions from other devices.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Settings view -->
+    <section class="view" id="view-settings">
+      <div class="settings-list">
+
+        <div class="settings-group">
+          <div class="settings-group-label">Device</div>
+          <div class="setting-row">
+            <div class="setting-info">
+              <span class="setting-label">Device name</span>
+              <span class="setting-desc">Shown on synced sessions</span>
+            </div>
+            <input type="text" id="setting-device-name" class="setting-input" placeholder="My Firefox" maxlength="40" />
+          </div>
+        </div>
+
+        <div class="settings-group">
+          <div class="settings-group-label">Sync</div>
+          <div class="setting-row">
+            <div class="setting-info">
+              <span class="setting-label">Enable sync</span>
+              <span class="setting-desc">Push sessions to Firefox Sync</span>
+            </div>
+            <label class="toggle"><input type="checkbox" id="setting-sync" /><span class="track"></span></label>
+          </div>
+        </div>
+
+        <div class="settings-group">
+          <div class="settings-group-label">Behaviour</div>
+          <div class="setting-row">
+            <div class="setting-info">
+              <span class="setting-label">Notifications</span>
+              <span class="setting-desc">Show alerts when sessions are logged</span>
+            </div>
+            <label class="toggle"><input type="checkbox" id="setting-notifications" /><span class="track"></span></label>
+          </div>
+          <div class="setting-row">
+            <div class="setting-info">
+              <span class="setting-label">Max saved sessions</span>
+              <span class="setting-desc">Older sessions are removed</span>
+            </div>
+            <select id="setting-max-sessions" class="setting-select">
+              <option value="20">20</option>
+              <option value="50">50</option>
+              <option value="100">100</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="settings-group">
+          <div class="settings-group-label">Appearance</div>
+          <div class="setting-row">
+            <div class="setting-info">
+              <span class="setting-label">Theme</span>
+            </div>
+            <select id="setting-theme" class="setting-select">
+              <option value="system">Follow system</option>
+              <option value="light">Light</option>
+              <option value="dark">Dark</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="settings-group">
+          <div class="settings-group-label">Data</div>
+          <div class="setting-row setting-row--actions">
+            <button class="btn btn-outline" id="btn-export">Export JSON</button>
+            <button class="btn btn-outline" id="btn-import">Import JSON</button>
+            <input type="file" id="import-file" accept=".json" class="hidden" />
+          </div>
+          <div class="setting-row setting-row--actions">
+            <button class="btn btn-danger-outline" id="btn-clear-all">Clear all sessions</button>
+          </div>
+        </div>
+
+        <button class="btn btn-primary btn-full" id="btn-save-settings">Save settings</button>
+
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ── Tab detail drawer ──────────────────────────────────── -->
+  <aside class="drawer" id="drawer" aria-hidden="true">
+    <div class="drawer-header">
+      <span class="drawer-title" id="drawer-title">Session tabs</span>
+      <button class="icon-btn" id="drawer-close" aria-label="Close">
+        <svg viewBox="0 0 16 16" fill="none"><path d="M4 4l8 8M12 4l-8 8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+      </button>
+    </div>
+    <div class="drawer-actions">
+      <button class="btn btn-primary btn-sm" id="drawer-restore">Restore all</button>
+      <button class="btn btn-outline btn-sm" id="drawer-copy-urls">Copy URLs</button>
+      <button class="btn btn-danger-outline btn-sm" id="drawer-delete">Delete</button>
+    </div>
+    <div class="drawer-tab-list" id="drawer-tab-list"></div>
+  </aside>
+  <div class="drawer-overlay hidden" id="drawer-overlay"></div>
+
+  <!-- ── Toast ─────────────────────────────────────────────── -->
+  <div class="toast hidden" id="toast"></div>
+
+  <script src="popup.js"></script>
+</body>
+</html>
